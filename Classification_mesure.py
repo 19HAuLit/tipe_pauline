@@ -6,11 +6,14 @@ import pandas as pd
 from sklearn import metrics
 from sklearn.neighbors import KNeighborsClassifier
 
-nombre_colonne = 20
+# Doit être le même que dans data.py
+nombre_colonne = 50
+
 dossier_data = 'datas/'
 
 for fichier in os.listdir(dossier_data):
-    if not fichier[-4:] == '.csv':
+    # Vérification d'un fichier data
+    if not fichier[-4:] == '.csv' and not fichier[:4] == 'data':
         continue
     # Import des données :
     data = pd.read_csv(dossier_data + fichier, sep=',')
@@ -19,7 +22,6 @@ for fichier in os.listdir(dossier_data):
     donnees = [f'a{i}' for i in range(nombre_colonne)]
     donnees.append('type_chute')
     df = pd.DataFrame(data[donnees])
-    print(df)
 
     # Classification par k plus proches voisins :
     model = KNeighborsClassifier(n_neighbors=5)
@@ -29,7 +31,7 @@ for fichier in os.listdir(dossier_data):
     predictions = model.predict(X)
 
     # Précision du modèle :
-    print("\n Précision :\n", model.score(X, y))
+    print(f"\n Précision pour {fichier} :\n", model.score(X, y))
 
     # Matrice de confusion :
     confusion_matrix = metrics.confusion_matrix(y, predictions)
@@ -38,7 +40,13 @@ for fichier in os.listdir(dossier_data):
     fig, ax = plt.subplots()
     ax.matshow(confusion_matrix)
 
+    type_chute = ['Escalier', 'Marche Arret', 'Marche Rapide', 'Sur Place']
+
     fig.suptitle(f'Matrice de confusion pour {fichier}')
+    ax.set_xticks(np.arange(len(type_chute)))
+    ax.set_yticks(np.arange(len(type_chute)))
+    ax.set_xticklabels(type_chute)
+    ax.set_yticklabels(type_chute)
 
     for (i, j), z in np.ndenumerate(confusion_matrix):
         ax.text(j, i, '{:0}'.format(z), ha='center', va='center')
