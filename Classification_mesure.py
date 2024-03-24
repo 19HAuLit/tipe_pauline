@@ -11,6 +11,8 @@ nombre_colonne = 50
 
 dossier_data = 'datas/'
 
+type_chute = ['Escalier', 'Marche Arret', 'Marche Rapide', 'Sur Place']
+
 for fichier in os.listdir(dossier_data):
     # Vérification d'un fichier data
     if not fichier[-4:] == '.csv' and not fichier[:4] == 'data':
@@ -40,14 +42,16 @@ for fichier in os.listdir(dossier_data):
     fig, ax = plt.subplots()
     ax.matshow(confusion_matrix)
 
-    type_chute = ['Escalier', 'Marche Arret', 'Marche Rapide', 'Sur Place']
-
+    # Renommage des axes
     fig.suptitle(f'Matrice de confusion pour {fichier}')
     ax.set_xticks(np.arange(len(type_chute)))
     ax.set_yticks(np.arange(len(type_chute)))
     ax.set_xticklabels(type_chute)
     ax.set_yticklabels(type_chute)
 
+    # Ajout des données dans l'image
     for (i, j), z in np.ndenumerate(confusion_matrix):
         ax.text(j, i, '{:0}'.format(z), ha='center', va='center')
-    plt.show()
+
+    # Enregistrement de la matrice de confusion en image
+    plt.savefig(f'matrice_confusion_{fichier}.png')
