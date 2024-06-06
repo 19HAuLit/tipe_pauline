@@ -26,7 +26,7 @@ for fichier in os.listdir(dossier_data):
     df = pd.DataFrame(data[donnees])
 
     # Classification par k plus proches voisins :
-    model = KNeighborsClassifier(n_neighbors=5)
+    model = KNeighborsClassifier(n_neighbors=2)
     y = df['type_chute']
     X = df.drop('type_chute', axis=1)
     model.fit(X, y)
